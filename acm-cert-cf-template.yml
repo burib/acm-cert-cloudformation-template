@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  public ACM certificate stack used by cloudfront
+
+Parameters:
+  DomainName:
+    Type: String
+  HostedZoneId:
+    Type: String
+
+
+Resources:
+  ACMCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Sub "*.${DomainName}"
+      DomainValidationOptions:
+        - DomainName: !Sub "${DomainName}"
+          HostedZoneId: !Sub "${HostedZoneId}"
+      ValidationMethod: DNS
+
+Outputs:
+  AcmCertificateArn:
+    Value: !Ref ACMCertificate
